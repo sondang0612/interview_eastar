@@ -8,3 +8,40 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+html,
+body {
+  font-family: "Noto Sans";
+}
+
+.box-shadow-primary {
+  box-shadow: 0 0 20px #333;
+}
+
+.ticket_container {
+  padding-top: 10px;
+  border-radius: 10px;
+}
+
+.ticket_container:hover {
+  @apply border-x-[4.8px] border-b-[4.8px] border-[#6A96DD] box-shadow-primary pt-4 rounded-t-none;
+}
+
+.ticket_operation {
+  display: none;
+}
+
+.ticket_container:hover .ticket_operation {
+  display: flex;
+  width: calc(100% + 9.6px);
+  padding: 4px 4.8px 10px 4.8px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.ticket_container:hover .line_spacer {
+  margin-bottom: 7px !important;
+  margin-top: 1.5px !important;
+}
+.ticket_container:hover .sub_ticket_container {
+  padding-left: 3px;
+}
