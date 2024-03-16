@@ -8,9 +8,15 @@ type Props = {
   selectedCellClassName: string;
 };
 
-const SubTicket = (props: Props) => {
+const SubTicket = React.forwardRef(function SubTicket(props: Props, ref) {
   const { limit = 5, totalCells = 70, selectedCellClassName } = props;
   const [cells, setCells] = React.useState<number[]>([]);
+
+  React.useImperativeHandle(ref, () => ({ clearSelectedCells }));
+
+  const clearSelectedCells = () => {
+    setCells([]);
+  };
 
   const onCellClick = React.useCallback(
     (cellValue: number) => {
@@ -47,6 +53,6 @@ const SubTicket = (props: Props) => {
       </div>
     </div>
   );
-};
+});
 
 export default SubTicket;
