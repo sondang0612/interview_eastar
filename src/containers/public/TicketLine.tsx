@@ -13,37 +13,40 @@ import SubTicket from "./SubTicket";
 type Props = {
   toggleClear: Toggle;
   toggleQuickPick: Toggle;
+  mainCellsLimit?: number;
 };
 const TicketLine = (props: Props) => {
-  const { toggleClear, toggleQuickPick } = props;
+  const { toggleClear, toggleQuickPick, mainCellsLimit = LIMIT_LARGE } = props;
   const [mainCells, setMainCells] = React.useState<number[]>([]);
   const [subCells, setSubCells] = React.useState<number[]>([]);
 
-  const onQuickPickMainCells = () => {
+  const onQuickPickMainCells = React.useCallback(() => {
     for (let i = 0; i < TOTAL_RANDOM_TIMES; i++) {
       setTimeout(() => {
-        setMainCells(randomNonRepeatingNumbers(LIMIT_CELL_LARGE, LIMIT_LARGE));
+        setMainCells(
+          randomNonRepeatingNumbers(LIMIT_CELL_LARGE, mainCellsLimit)
+        );
       }, i * RANDOM_SPEED);
     }
-  };
+  }, [mainCellsLimit]);
 
-  const onQuickPickSubCells = () => {
+  const onQuickPickSubCells = React.useCallback(() => {
     for (let i = 0; i < TOTAL_RANDOM_TIMES; i++) {
       setTimeout(() => {
         setSubCells(randomNonRepeatingNumbers(LIMIT_CELL_SMALL, LIMIT_SMALL));
       }, i * RANDOM_SPEED);
     }
-  };
+  }, []);
 
-  const onClearSelectedCells = () => {
+  const onClearSelectedCells = React.useCallback(() => {
     setMainCells([]);
     setSubCells([]);
-  };
+  }, []);
 
   const onQuickPick = React.useCallback(() => {
     onQuickPickMainCells();
     onQuickPickSubCells();
-  }, []);
+  }, [onQuickPickMainCells, onQuickPickSubCells]);
 
   const isSuccess = React.useMemo(() => {
     return mainCells.length === LIMIT_LARGE && subCells.length === LIMIT_SMALL;
@@ -53,7 +56,7 @@ const TicketLine = (props: Props) => {
     if (toggleClear.first.current) {
       onClearSelectedCells();
     }
-  }, [toggleClear]);
+  }, [toggleClear, onClearSelectedCells]);
 
   React.useEffect(() => {
     if (toggleQuickPick.first.current) {
@@ -71,16 +74,18 @@ const TicketLine = (props: Props) => {
           >
             Quick Pick
           </div>
-          <div
-            className="bg-white rounded-full cursor-pointer py-0.5 px-1.5"
-            onClick={onClearSelectedCells}
-          >
-            <img src="trash.svg" alt="Trash Icon" className="size-[18px]" />
-          </div>
+          {isSuccess && (
+            <div
+              className="bg-white rounded-full cursor-pointer py-0.5 px-1.5"
+              onClick={onClearSelectedCells}
+            >
+              <img src="trash.svg" alt="Trash Icon" className="size-[18px]" />
+            </div>
+          )}
         </div>
         <div className="sub_ticket_container">
           <SubTicket
-            limit={LIMIT_LARGE}
+            limit={mainCellsLimit}
             totalCells={LIMIT_CELL_LARGE}
             selectedCellClassName="text-white bg-[#374456] hover:bg-[#374456] hover:text-primary"
             cells={mainCells}
