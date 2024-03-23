@@ -6,17 +6,12 @@ type Props = {
   totalCells: number;
   limit: number;
   selectedCellClassName: string;
+  cells: number[];
+  setCells: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const SubTicket = React.forwardRef(function SubTicket(props: Props, ref) {
-  const { limit = 5, totalCells = 70, selectedCellClassName } = props;
-  const [cells, setCells] = React.useState<number[]>([]);
-
-  React.useImperativeHandle(ref, () => ({ clearSelectedCells }));
-
-  const clearSelectedCells = () => {
-    setCells([]);
-  };
+const SubTicket = (props: Props) => {
+  const { limit, totalCells, selectedCellClassName, cells, setCells } = props;
 
   const onCellClick = React.useCallback(
     (cellValue: number) => {
@@ -32,7 +27,7 @@ const SubTicket = React.forwardRef(function SubTicket(props: Props, ref) {
         }
       });
     },
-    [limit]
+    [limit, setCells]
   );
 
   return (
@@ -53,6 +48,6 @@ const SubTicket = React.forwardRef(function SubTicket(props: Props, ref) {
       </div>
     </div>
   );
-});
+};
 
-export default SubTicket;
+export default React.memo(SubTicket);

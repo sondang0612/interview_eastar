@@ -45,3 +45,7 @@ body {
 .ticket_container:hover .sub_ticket_container {
   padding-left: 3px;
 }
+
+.ticket_container:hover .show_success {
+  display: flex;
+}
